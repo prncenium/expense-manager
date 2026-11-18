@@ -49,19 +49,17 @@ export type VoiceLang = 'en-IN' | 'hi-IN';
 
 export interface VoicePrefs {
   lang: VoiceLang;
-  /** read replies to spoken questions aloud */
-  speak: boolean;
 }
 
 const PREFS_KEY = 'muneem.voice';
 
-/** Per-browser convenience (localStorage); falls back to English + speaking on. */
+/** Per-browser convenience (localStorage); falls back to English. */
 export function loadPrefs(): VoicePrefs {
   try {
     const p = JSON.parse(localStorage.getItem(PREFS_KEY) ?? '{}') as Partial<VoicePrefs>;
-    return { lang: p.lang === 'hi-IN' ? 'hi-IN' : 'en-IN', speak: p.speak !== false };
+    return { lang: p.lang === 'hi-IN' ? 'hi-IN' : 'en-IN' };
   } catch {
-    return { lang: 'en-IN', speak: true };
+    return { lang: 'en-IN' };
   }
 }
 

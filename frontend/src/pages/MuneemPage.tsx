@@ -88,17 +88,15 @@ function NotesPanel({
   );
 }
 
-/** Language picker, "speak replies" switch and a stop button while Muneem is talking. */
+/** Language picker and a stop button while Muneem is talking. */
 function VoiceControls({
   prefs,
   onChange,
-  canSpeak,
   speaking,
   onStop,
 }: {
   prefs: VoicePrefs;
   onChange: (p: VoicePrefs) => void;
-  canSpeak: boolean;
   speaking: boolean;
   onStop: () => void;
 }) {
@@ -116,17 +114,6 @@ function VoiceControls({
           <option value="hi-IN">हिन्दी</option>
         </select>
       </label>
-      {canSpeak && (
-        <label className="flex cursor-pointer items-center gap-1.5 text-slate-600">
-          <input
-            type="checkbox"
-            checked={prefs.speak}
-            onChange={(e) => onChange({ ...prefs, speak: e.target.checked })}
-            className="h-4 w-4 accent-indigo-600"
-          />
-          Speak replies
-        </label>
-      )}
       {speaking && (
         <Button variant="secondary" size="sm" onClick={onStop}>
           ■ Stop speaking
@@ -148,7 +135,6 @@ export function MuneemPage() {
           <VoiceControls
             prefs={chat.prefs}
             onChange={chat.changePrefs}
-            canSpeak={tts.supported}
             speaking={tts.speaking}
             onStop={tts.stop}
           />
@@ -192,7 +178,7 @@ export function MuneemPage() {
               <li>Muneem only reads your expenses; he can't add, change or delete them.</li>
               <li>Numbers come straight from your data, not from the AI's guesses.</li>
               <li>Uses free AI plans (Gemini, then Groq). Only summaries and a few rows are sent.</li>
-              <li>Tap the mic, speak, then pause: Muneem answers short and reads it aloud.</li>
+              <li>Tap the mic, speak, then pause: Muneem answers short. Tap 🔊 under a reply to hear it.</li>
               <li>The "Ask Muneem" button at the bottom right of every page opens this same chat.</li>
             </ul>
           </Card>

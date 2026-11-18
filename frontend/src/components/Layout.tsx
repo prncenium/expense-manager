@@ -47,8 +47,8 @@ export function Layout() {
 
   return (
     <MuneemChatProvider>
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+    <div className="min-h-screen overflow-x-clip bg-slate-50 text-slate-900">
+      <header className="anim-slide-down sticky top-0 z-30 border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           <NavLink to="/" className="flex items-center gap-2 font-semibold text-slate-900">
             <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-sm text-white">₹</span>
@@ -91,7 +91,9 @@ export function Layout() {
       <ServerBanner />
 
       <main className="mx-auto max-w-6xl px-4 pb-24 pt-6">
-        <Outlet />
+        <div key={location.pathname} className="anim-fade-in">
+          <Outlet />
+        </div>
       </main>
 
       <MuneemWidget />

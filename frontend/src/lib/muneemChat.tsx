@@ -18,6 +18,10 @@ export interface MuneemChat {
   changePrefs: (p: VoicePrefs) => void;
   stt: SpeechRecognitionApi;
   tts: SpeechSynthesisApi;
+  /** id of the reply being read aloud, or null */
+  speakingId: number | null;
+  /** 🔊 on a reply: reads it aloud, or stops if it is the one already talking */
+  toggleSpeak: (item: ChatItem) => void;
   inputRef: RefObject<HTMLTextAreaElement>;
   send: (text: string) => void;
   retry: () => void;
@@ -44,6 +48,18 @@ export function MuneemChatProvider({ children }: { children: ReactNode }) {
   const [prefs, setPrefs] = useState<VoicePrefs>(loadPrefs);
   const stt = useSpeechRecognition();
   const tts = useSpeechSynthesis();
+  const [speakId, setSpeakId] = useState<number | null>(null);
+  const speakingId = tts.speaking ? speakId : null;
+
+  function toggleSpeak(item: ChatItem) {
+    if (speakingId === item.id) {
+      tts.stop();
+      return;
+    }
+    stt.stop();
+    setSpeakId(item.id);
+    tts.speak(item.content, prefs.lang);
+  }
 
   useEffect(() => saveChat(items), [items]);
 
@@ -52,7 +68,6 @@ export function MuneemChatProvider({ children }: { children: ReactNode }) {
   function changePrefs(p: VoicePrefs) {
     setPrefs(p);
     savePrefs(p);
-    if (!p.speak) tts.stop();
   }
 
   async function sendWith(text: string, base: ChatItem[] = items, voice = false) {
@@ -70,7 +85,6 @@ export function MuneemChatProvider({ children }: { children: ReactNode }) {
         { id: nextId.current++, role: 'assistant', content: r.reply, provider: r.provider, suggestions: r.suggestions },
       ]);
       if (r.toolsUsed.includes('save_note')) setNotesVersion((v) => v + 1);
-      if (voice && prefs.speak) tts.speak(r.reply, prefs.lang);
     } catch (e) {
       const content =
         e instanceof NetworkError
@@ -126,6 +140,8 @@ export function MuneemChatProvider({ children }: { children: ReactNode }) {
     changePrefs,
     stt,
     tts,
+    speakingId,
+    toggleSpeak,
     inputRef,
     send: (text) => void sendWith(text),
     retry,

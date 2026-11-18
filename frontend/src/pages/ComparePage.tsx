@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { api } from '../api/client';
-import { Button, Card, ErrorBox, inputClass, labelClass, PageHeader, SkeletonBlock } from '../components/ui';
+import { Button, Card, CHART_ANIM, CountUp, ErrorBox, inputClass, labelClass, PageHeader, SkeletonBlock } from '../components/ui';
 import { categoryName } from '../lib/categorize';
 import { colorFor } from '../lib/colors';
 import { inr, inrShort, monthLabel, MONTH_RE, recentMonths, todayIso } from '../lib/format';
@@ -131,7 +131,7 @@ export function ComparePage() {
 
   return (
     <>
-      <PageHeader title="Compare" />
+      <PageHeader title="Compare" hero="compare" />
 
       <Card className="mb-5">
         <fieldset>
@@ -466,7 +466,7 @@ function Results({
           <p className="text-sm text-slate-500">Change A → B</p>
           <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
             {totalB - totalA >= 0 ? '+' : '−'}
-            {inr(Math.abs(totalB - totalA))}
+            <CountUp value={Math.abs(totalB - totalA)} format={inr} />
             <span className="text-sm font-normal text-slate-500">{unit}</span>
           </p>
           <div className="mt-1">
@@ -497,7 +497,7 @@ function StatTile({ color, title, value, unit, sub }: { color: string; title: st
         {title}
       </p>
       <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
-        {inr(value)}
+        <CountUp value={value} format={inr} />
         <span className="text-sm font-normal text-slate-500">{unit}</span>
       </p>
       <p className="mt-1 text-xs text-slate-500">{sub}</p>
@@ -560,8 +560,8 @@ function CompareChart({ rows, labelA, labelB, unit }: { rows: ViewRow[]; labelA:
               iconSize={10}
               formatter={(value) => <span style={{ color: '#334155' }}>{value}</span>}
             />
-            <Bar dataKey="a" name={`A · ${labelA}`} fill={COLOR_A} radius={[4, 4, 0, 0]} maxBarSize={40} />
-            <Bar dataKey="b" name={`B · ${labelB}`} fill={COLOR_B} radius={[4, 4, 0, 0]} maxBarSize={40} />
+            <Bar dataKey="a" name={`A · ${labelA}`} fill={COLOR_A} radius={[4, 4, 0, 0]} maxBarSize={40} {...CHART_ANIM} />
+            <Bar dataKey="b" name={`B · ${labelB}`} fill={COLOR_B} radius={[4, 4, 0, 0]} maxBarSize={40} {...CHART_ANIM} />
           </BarChart>
         </ResponsiveContainer>
       </div>

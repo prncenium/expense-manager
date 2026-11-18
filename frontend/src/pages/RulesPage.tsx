@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from 'react';
 import { api, ApiError, errorMessage, NetworkError } from '../api/client';
 import { useToast } from '../components/Toasts';
-import { Button, Card, ErrorBox, inputClass, labelClass, PageHeader, SkeletonRows } from '../components/ui';
+import { Button, Card, ErrorBox, inputClass, labelClass, PageHeader, Pager, SkeletonRows } from '../components/ui';
+
+const RULES_PAGE_SIZE = 10;
 import { categoryName } from '../lib/categorize';
 import { inr, shortDate } from '../lib/format';
 import { useAsync } from '../lib/useAsync';
@@ -49,6 +51,7 @@ export function RulesPage() {
   const [addErrors, setAddErrors] = useState<FormErrors>({});
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [rulePage, setRulePage] = useState(1);
   // bumped after any rule change so the Uncategorized panel reloads
   const [panelVersion, setPanelVersion] = useState(0);
   const rulesChanged = () => {
@@ -80,10 +83,14 @@ export function RulesPage() {
   }
 
   const sorted = [...(rules.data ?? [])].sort((a, b) => a.category.localeCompare(b.category) || a.keyword.localeCompare(b.keyword));
+  // Client-side paging: clamp so deleting the last rule on the last page steps back a page.
+  const totalPages = Math.max(1, Math.ceil(sorted.length / RULES_PAGE_SIZE));
+  const page = Math.min(rulePage, totalPages);
+  const pageRules = sorted.slice((page - 1) * RULES_PAGE_SIZE, page * RULES_PAGE_SIZE);
 
   return (
     <>
-      <PageHeader title="Rules" />
+      <PageHeader title="Rules" hero="rules" />
       <p className="-mt-3 mb-5 max-w-2xl text-sm text-slate-500">
         A vendor gets the category of the <strong>longest keyword</strong> it contains (case-insensitive); no match means{' '}
         <strong>Other</strong>. Saving a rule also moves matching expenses that are still in Other; expenses already in
@@ -167,7 +174,7 @@ export function RulesPage() {
             <>
               <p className="mb-3 text-sm text-slate-500">{sorted.length} rules</p>
               <ul className="divide-y divide-slate-100 rounded-lg border border-slate-200">
-                {sorted.map((r) =>
+                {pageRules.map((r) =>
                   editingId === r.id ? (
                     <EditRow
                       key={r.id}
@@ -183,6 +190,18 @@ export function RulesPage() {
                   ),
                 )}
               </ul>
+              <Pager
+                page={page}
+                totalPages={totalPages}
+                first={(page - 1) * RULES_PAGE_SIZE + 1}
+                last={(page - 1) * RULES_PAGE_SIZE + pageRules.length}
+                total={sorted.length}
+                noun="rules"
+                onPage={(p) => {
+                  setEditingId(null);
+                  setRulePage(p);
+                }}
+              />
             </>
           )}
         </Card>

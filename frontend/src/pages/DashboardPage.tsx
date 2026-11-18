@@ -4,7 +4,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import { api, errorMessage, NetworkError } from '../api/client';
 import { AnomalyBadge, Amount } from '../components/AnomalyBadge';
 import { useToast } from '../components/Toasts';
-import { Button, Card, ErrorBox, inputClass, PageHeader, SkeletonBlock, SkeletonRows } from '../components/ui';
+import { Button, Card, CHART_ANIM, CountUp, ErrorBox, useStagger, inputClass, PageHeader, SkeletonBlock, SkeletonRows } from '../components/ui';
 import { inr, inrShort, longDate, monthLabel, monthShort, MONTH_RE, recentMonths } from '../lib/format';
 import { useAsync } from '../lib/useAsync';
 import { categoryName } from '../lib/categorize';
@@ -22,7 +22,7 @@ export function DashboardPage() {
 
   return (
     <>
-      <PageHeader title="Dashboard">
+      <PageHeader title="Dashboard" hero="dashboard">
         {!firstRun && (
           <div className="w-full sm:w-48">
             <label htmlFor="d-month" className="sr-only">
@@ -143,24 +143,32 @@ function FirstRun({ onLoaded }: { onLoaded: () => void }) {
 function StatCards({ d, month }: { d: Dashboard; month: string }) {
   const period = month ? monthLabel(month) : 'All time';
   const anomalyLink = `/expenses?anomaliesOnly=true${month ? `&month=${month}` : ''}`;
+  const anomalyStyle = useStagger();
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       <Card>
         <p className="text-sm text-slate-500">Total spend · {period}</p>
-        <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">{inr(d.totals.spend)}</p>
+        <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
+          <CountUp value={d.totals.spend} format={inr} />
+        </p>
       </Card>
       <Card>
         <p className="text-sm text-slate-500">Expenses · {period}</p>
-        <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">{d.totals.count}</p>
+        <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
+          <CountUp value={d.totals.count} />
+        </p>
       </Card>
       <Link
         to={anomalyLink}
         data-testid="anomaly-card"
-        className="block rounded-xl border border-red-200 bg-red-50 p-4 shadow-sm transition-colors hover:bg-red-100 sm:p-5"
+        style={anomalyStyle}
+        className="anim-fade-up block rounded-xl border border-red-200 bg-red-50 p-4 shadow-sm transition-colors hover:bg-red-100 sm:p-5"
       >
         <p className="text-sm font-medium text-red-700">⚠ High expenses · {period}</p>
         <p className="mt-1 flex items-baseline justify-between text-2xl font-semibold tabular-nums text-red-700">
-          {d.anomalies.count}
+          <span>
+            <CountUp value={d.anomalies.count} />
+          </span>
           <span className="text-sm font-medium">View →</span>
         </p>
       </Link>
@@ -221,7 +229,7 @@ function MonthlyChart({ d }: { d: Dashboard }) {
                 formatter={(value) => <span style={{ color: '#334155' }}>{value}</span>}
               />
               {categories.map((c) => (
-                <Bar key={c.id} dataKey={c.name} stackId="m" fill={colorFor(c.id)} stroke="#ffffff" strokeWidth={2} maxBarSize={72} />
+                <Bar key={c.id} dataKey={c.name} stackId="m" fill={colorFor(c.id)} stroke="#ffffff" strokeWidth={2} maxBarSize={72} {...CHART_ANIM} />
               ))}
             </BarChart>
           </ResponsiveContainer>

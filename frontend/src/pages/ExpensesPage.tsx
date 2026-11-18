@@ -11,6 +11,7 @@ import {
   inputClass,
   labelClass,
   PageHeader,
+  Pager,
   SkeletonRows,
 } from '../components/ui';
 import { categoryName, previewCategory } from '../lib/categorize';
@@ -18,7 +19,7 @@ import { inr, longDate, monthLabel, MONTH_RE, recentMonths, shortDate, times, to
 import { useAsync, type AsyncState } from '../lib/useAsync';
 import type { Category, Expense, ExpenseFilters, ExpensePage, Rule } from '../types';
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 10;
 
 export function ExpensesPage() {
   const [params, setParams] = useSearchParams();
@@ -74,7 +75,7 @@ export function ExpensesPage() {
 
   return (
     <>
-      <PageHeader title="Expenses" />
+      <PageHeader title="Expenses" hero="expenses" />
       <div className="grid gap-6 lg:grid-cols-[22rem_1fr] lg:items-start">
         <AddExpenseForm rules={rules.data} onAdded={() => {
           list.reload();
@@ -491,46 +492,8 @@ function ExpenseList({
         ))}
       </ul>
 
-      <Pager page={data.page + 1} totalPages={data.totalPages} first={first} last={last} total={data.totalItems} busy={state.loading} onPage={onPage} />
+      <Pager page={data.page + 1} totalPages={data.totalPages} first={first} last={last} total={data.totalItems} noun="expenses" busy={state.loading} onPage={onPage} />
     </div>
   );
 }
 
-function Pager({
-  page,
-  totalPages,
-  first,
-  last,
-  total,
-  busy,
-  onPage,
-}: {
-  page: number;
-  totalPages: number;
-  first: number;
-  last: number;
-  total: number;
-  busy: boolean;
-  onPage: (page: number) => void;
-}) {
-  return (
-    <nav aria-label="Pages" className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
-      <p className="text-slate-500">
-        {first}–{last} of {total}
-      </p>
-      {totalPages > 1 && (
-        <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" disabled={busy || page <= 1} onClick={() => onPage(page - 1)}>
-            ← Prev
-          </Button>
-          <span className="tabular-nums text-slate-600" aria-current="page">
-            Page {page} of {totalPages}
-          </span>
-          <Button variant="secondary" size="sm" disabled={busy || page >= totalPages} onClick={() => onPage(page + 1)}>
-            Next →
-          </Button>
-        </div>
-      )}
-    </nav>
-  );
-}

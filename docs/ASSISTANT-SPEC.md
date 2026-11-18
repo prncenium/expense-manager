@@ -122,7 +122,7 @@ v1 is **not streaming** (simpler, and it holds no open connections). The UI show
   - Chat: bubbles, a "thinking…" state, suggestion chips under the last reply, and a provider tag in small grey text ("via Groq").
   - Empty state chips: "Where did I spend most this month?", "How can I save money?", "This month vs last month", "Any unusual expenses?".
   - **Mic button**: tap to talk, tap again (or silence) to stop; the transcript fills the box and is sent. While it listens: a pulsing red dot. The mic is hidden in browsers without `SpeechRecognition` (tooltip: "Voice works in Chrome / Edge").
-  - **Speak replies** switch (remembered in `localStorage`, default on): replies to **spoken** questions are read aloud (typed questions are not). A **Stop speaking** button shows while it talks. Tapping the mic, sending, or New chat stops any speech.
+  - Replies are **not** read aloud by default. A **🔊** button under each reply reads it aloud (tap again, ■, to stop). A **Stop speaking** button shows while it talks. Tapping the mic, sending, or New chat stops any speech.
   - **Language picker:** English (India) / हिन्दी, used for both listening and speaking.
   - "Remembered" panel: lists the notes, each with delete.
 - Built in step 4: `pages/MuneemPage.tsx`, `lib/muneemSession.ts` (sessionStorage, last 40, history = last 20 non-error messages), API calls in `api/client.ts`, types in `types/index.ts`. Replies are shown as plain text with light markdown (bold, bullet lines), never as HTML. A failed reply shows a red bubble with **Try again**. A "Good to know" card explains read-only, numbers from data, and the free AI plans.

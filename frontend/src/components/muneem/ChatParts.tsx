@@ -58,6 +58,8 @@ export function MuneemAvatar({ size = 'sm' }: { size?: 'sm' | 'lg' }) {
 }
 
 function Bubble({ item, onRetry }: { item: ChatItem; onRetry?: () => void }) {
+  const { tts, speakingId, toggleSpeak } = useMuneemChat();
+  const talking = speakingId === item.id;
   if (item.role === 'user') {
     return (
       <div className="flex justify-end">
@@ -84,8 +86,22 @@ function Bubble({ item, onRetry }: { item: ChatItem; onRetry?: () => void }) {
             Try again
           </Button>
         )}
-        {item.provider && (
-          <p className="mt-0.5 pl-1 text-[11px] text-slate-400">via {PROVIDER_NAMES[item.provider] ?? item.provider}</p>
+        {!item.error && (
+          <div className="mt-0.5 flex items-center gap-2 pl-1 text-[11px] text-slate-400">
+            {tts.supported && (
+              <button
+                type="button"
+                onClick={() => toggleSpeak(item)}
+                aria-pressed={talking}
+                aria-label={talking ? 'Stop reading aloud' : 'Read aloud'}
+                title={talking ? 'Stop' : 'Listen'}
+                className={`rounded px-1 text-sm leading-none hover:bg-slate-100 ${talking ? 'text-indigo-600' : 'text-slate-500'}`}
+              >
+                {talking ? '■' : '🔊'}
+              </button>
+            )}
+            {item.provider && <span>via {PROVIDER_NAMES[item.provider] ?? item.provider}</span>}
+          </div>
         )}
       </div>
     </div>
