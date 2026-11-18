@@ -1,0 +1,9 @@
+# Fallback when a builder ignores the per-Dockerfile *.dockerignore files.
+.git
+**/node_modules
+**/dist
+**/target
+**/*.tsbuildinfo
+docs
+logs
+*.md

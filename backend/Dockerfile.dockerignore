@@ -1,0 +1,5 @@
+# Used by BuildKit for backend/Dockerfile (context = repo root). Only backend sources + the sample CSV are sent.
+*
+!backend/pom.xml
+!backend/src
+!sample-data/expenses.csv

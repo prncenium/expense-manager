@@ -1,0 +1,46 @@
+date,amount,vendor,description
+2026-09-01,350,Swiggy,Lunch
+2026-09-02,649,Netflix,Monthly plan
+2026-09-03,240,Uber,Office cab
+2026-09-05,640,Blinkit,Weekly groceries
+2026-09-06,1499,Amazon,Headphones
+2026-09-08,420,Zomato,Dinner
+2026-09-10,799,Airtel,Postpaid bill
+2026-09-12,180,Ola,
+2026-09-14,1265,IRCTC,Train to Pune
+2026-09-15,280,Swiggy Instamart,Snacks
+2026-09-18,"₹2,199",Flipkart,Shoes
+2026-09-20,560,Apollo Pharmacy,Medicines
+2026-09-22,90,Rapido,Bike taxi
+2026-09-25,2340,Electricity Board,September bill
+2026-09-27,-150,Swiggy,Refund entered by mistake
+2026-09-28,230,Local Kirana Store,Milk and bread
+2026-10-01,510,Zomato,Team lunch
+2026-10-02,649,Netflix,Monthly plan
+2026-10-04,310,Uber,
+2026-10-05,520,Zepto,Fruits
+2026-10-07,1799,Myntra,Kurta
+2026-10-09,390,Swiggy,Dinner
+2026-10-10,799,Airtel,Postpaid bill
+2026-10-12,299,Amazon Prime Video,Annual add-on
+2026-10-14,6200,Zomato,Birthday party order
+2026-10-15,220,Ola,
+2026-10-17,450,,Missing vendor
+2026-10-18,1850,BigBasket,Monthly stock-up
+2026-10-20,450,Swiggy,Lunch
+2026-10-22,5430,IndiGo,Flight to Delhi
+2026-10-25,780,BookMyShow,Movie tickets
+2026-10-28,899,Amazon,Phone case
+31-10-2026,120,Chai Point,Evening tea
+2026-11-01,300,Zomato,Lunch
+2026-11-02,649,Netflix,Monthly plan
+2026-11-03,260,Uber,Office cab
+2026-11-04,710,Blinkit,Weekly groceries
+05/11/2026,"₹1,250.50",Flipkart,Kitchen set
+2026-11-06,399,Jio,Recharge
+2026-11-08,3400,Uber,Airport ride
+2026-11-09,380,Swiggy,Dinner
+2026-11-10,890,PharmEasy,Vitamins
+2026-11-11,28999,Myntra,Winter jacket and shoes
+31-02-2026,500,Zomato,Impossible date
+2026-11-14,410,Zomato,Lunch

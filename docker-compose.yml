@@ -1,0 +1,50 @@
+# docker compose up --build  →  app at http://localhost:5173
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: expense_manager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      # postgres:18 keeps its data under /var/lib/postgresql/<version>/..., so mount the parent dir.
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d expense_manager"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/expense_manager
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      CORS_ORIGINS: http://localhost:5173
+      # Muneem (AI assistant): read from the git-ignored .env next to this file; empty = assistant off
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-flash-lite-latest}
+      GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-120b}
+    depends_on:
+      db:
+        condition: service_healthy
+    # Not published to the host: the browser reaches it through the frontend's nginx at /api.
+    # Uncomment to call it directly (e.g. from Postman):
+    # ports:
+    #   - "8080:8080"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  db-data:
